@@ -24,20 +24,20 @@ The tests are implemented using WebdriverIO, Mocha, and Chai.
   ```bash
   npx wdio run wdio.conf.js
 ```
-   Test Scenarios
-✅ Valid Login Test
+   **Test Scenarios**
+✅ **Valid Login Test**
    Verifies login with correct credentials:
 
    standard_user
 
    secret_sauce
 
-❌ Invalid Login Test
+❌ **Invalid Login Test**
    Checks for error message when logging in with incorrect credentials:
 
    Expected message: "Epic sadface: Username and password do not match any user in this service"
 
-🛒 Luxe Quality Checkout Flow
+🛒 **Luxe Quality Checkout Flow**
    Full purchase flow:
 
    Adding items to the cart
@@ -53,7 +53,7 @@ The tests are implemented using WebdriverIO, Mocha, and Chai.
    Confirming the message "Thank you for your order!"
 
 
-📁 Project Structure
+📁 **Project Structure**
 ```
 ├── test/
 ├── pages/
