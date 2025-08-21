@@ -26,31 +26,31 @@ The tests are implemented using WebdriverIO, Mocha, and Chai.
 ```
    Test Scenarios
 ✅ Valid Login Test
-Verifies login with correct credentials:
+   Verifies login with correct credentials:
 
-standard_user
+   standard_user
 
-secret_sauce
+   secret_sauce
 
 ❌ Invalid Login Test
-Checks for error message when logging in with incorrect credentials:
+   Checks for error message when logging in with incorrect credentials:
 
-Expected message: "Epic sadface: Username and password do not match any user in this service"
+   Expected message: "Epic sadface: Username and password do not match any user in this service"
 
 🛒 Luxe Quality Checkout Flow
-Full purchase flow:
+   Full purchase flow:
 
-Adding items to the cart
+   Adding items to the cart
 
-Verifying cart badge
+   Verifying cart badge
 
-Filling out user information
+   Filling out user information
 
-Verifying item prices, tax, and total
+   Verifying item prices, tax, and total
 
-Completing the order
+   Completing the order
 
-Confirming the message "Thank you for your order!"
+   Confirming the message "Thank you for your order!"
 
 
 📁 Project Structure
