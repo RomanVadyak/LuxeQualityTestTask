@@ -9,7 +9,6 @@ The tests are implemented using WebdriverIO, Mocha, and Chai.
 - [WebdriverIO](https://webdriver.io/)
 - [Mocha](https://mochajs.org/)
 - [Chai](https://www.chaijs.com/)
-- [Allure Reporter](https://webdriver.io/docs/allure-reporter/) *(optional)*
 
 ## 🚀 How to Run the Tests
 
@@ -52,11 +51,10 @@ Verifying item prices, tax, and total
 Completing the order
 
 Confirming the message "Thank you for your order!"
-│   ├── login.test.js
-│   ├── checkout.test.js
-│   └── ...
+
 
 📁 Project Structure
+```
 ├── test/
 ├── pages/
 │   ├── addToCart.page.js
@@ -72,5 +70,5 @@ Confirming the message "Thank you for your order!"
 ├── package.json
 ├── README.md
 └── wdio.conf.js
-
+```
 👨‍💻 Author: Roman Vadyak
