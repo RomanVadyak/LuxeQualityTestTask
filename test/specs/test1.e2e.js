@@ -1,71 +1,75 @@
-import LoginPage from "../pages/login.page";
-import AddToCart from "../pages/addToCart.page";
-import CheckoutForm from "../pages/checkout.page";
-import FinishPage from "../pages/finish.page";
-import ItemPrice from "../pages/itemPrices.page";
-import TitlePages from "../pages/titleNames.page";
+import loginPage from "../pages/login.page";
+import inventoryPage from "../pages/inventory.page";
+import checkoutForm from "../pages/checkout.page";
+import finishPage from "../pages/finish.page";
+import itemPrice from "../pages/itemPrices.page";
+import titlePages from "../pages/titleNames.page";
+import { generateUserData } from "../utils/faker";
 
 describe("Swag Labs test suite", () => {
   beforeEach(async () => {
-    await browser.url("https://www.saucedemo.com/");
+    await loginPage.open();
+  });
+  it("should log in with valid credentials", async () => {
+    await loginPage.login("standard_user", "secret_sauce");
+    await titlePages.currentTitleName("Products");
+    await titlePages.inventoryList();
   });
 
-  describe("Login tests", () => {
-    it("should log in with valid credentials", async () => {
-      await LoginPage.login("standard_user", "secret_sauce");
-      await TitlePages.currentTitleName("Products");
-      await TitlePages.inventoryList();
-    });
-
-    it("should show error with invalid credentials", async () => {
-      await LoginPage.login("unvalid_login", "unvalid_pass");
-      await LoginPage.notValidLogin(
-        "Epic sadface: Username and password do not match any user in this service"
-      );
-    });
+  it("should show error with invalid credentials", async () => {
+    await loginPage.login("invalid_login", "invalid_pass");
+    await loginPage.notValidLogin(
+      "Epic sadface: Username and password do not match any user in this service"
+    );
   });
 
-  describe("Shopping and Checkout flow", () => {
-    it("should complete full shopping flow", async () => {
-      await browser.url("https://www.saucedemo.com/");
-      await LoginPage.login("standard_user", "secret_sauce");
+  it("should complete full shopping flow", async () => {
+    const user = generateUserData();
+    await loginPage.open();
+    await loginPage.login("standard_user", "secret_sauce");
 
-      const invBike = await ItemPrice.firstItemPriceValue();
-      const invJacket = await ItemPrice.secondItemPriceValue();
-      const expectedItemTotal = invBike + invJacket;
+    const invBike = await itemPrice.firstItemPriceValue();
+    const invJacket = await itemPrice.secondItemPriceValue();
+    const expectedItemTotal = invBike + invJacket;
 
-      await AddToCart.cartItems();
-      await expect($(".shopping_cart_badge")).toBeDisplayed();
-      await TitlePages.currentTitleName("Your Cart");
+    await inventoryPage.cartItems();
+    await expect(inventoryPage.cartBadge).toHaveText("2");
+    await inventoryPage.openCart();
+    await titlePages.expectUrlContains("/cart.html");
+    await titlePages.currentTitleName("Your Cart");
+    await inventoryPage.verifyItemsCount(2);
 
-      await CheckoutForm.checkoutButton();
-      await TitlePages.currentTitleName("Checkout: Your Information");
-      await CheckoutForm.checkout("John", "Wick", "12345");
-      await expect($(".checkout_info")).toBeDisplayed();
-      await CheckoutForm.verifyFormValues("John", "Wick", "12345");
+    await checkoutForm.checkoutButton();
+    await titlePages.expectUrlContains("/checkout-step-one.html");
+    await titlePages.currentTitleName("Checkout: Your Information");
+    await checkoutForm.isCheckoutFormDisplayed();
+    await checkoutForm.fillForm(user);
+    await checkoutForm.verifyFormValues(user);
 
-      await FinishPage.continueButton();
-      await TitlePages.currentTitleName("Checkout: Overview");
+    await finishPage.continueButton();
+    await titlePages.expectUrlContains("/checkout-step-two.html");
+    await titlePages.currentTitleName("Checkout: Overview");
 
-      const coBike = await ItemPrice.firstItemCheckoutPriceValue();
-      const coJacket = await ItemPrice.secondItemCheckoutPriceValue();
-      expect(coBike).toBeCloseTo(invBike, 2);
-      expect(coJacket).toBeCloseTo(invJacket, 2);
+    const coBike = await itemPrice.firstItemCheckoutPriceValue();
+    const coJacket = await itemPrice.secondItemCheckoutPriceValue();
+    await expect(coBike).toBeCloseTo(invBike, 2);
+    await expect(coJacket).toBeCloseTo(invJacket, 2);
 
-      const itemTotal = await ItemPrice.itemTotalValue();
-      const tax = await ItemPrice.taxValue();
-      const total = await ItemPrice.totalValue();
+    const itemTotal = await itemPrice.itemTotalValue();
+    const tax = await itemPrice.taxValue();
+    const total = await itemPrice.totalValue();
 
-      expect(itemTotal).toBeCloseTo(expectedItemTotal, 2);
-      expect(total).toBeCloseTo(itemTotal + tax, 2);
+    await expect(itemTotal).toBeCloseTo(expectedItemTotal, 2);
+    await expect(total).toBeCloseTo(itemTotal + tax, 2);
 
-      await FinishPage.finishButton();
-      await TitlePages.currentTitleName("Checkout: Complete!");
-      await FinishPage.completeMsg("Thank you for your order!");
-      await FinishPage.backToProdButton();
-      await TitlePages.currentTitleName("Products");
-      await TitlePages.inventoryList();
-      await expect($(".shopping_cart_badge")).not.toBeDisplayed();
-    });
+    await finishPage.finishButton();
+    await titlePages.expectUrlContains("/checkout-complete.html");
+    await titlePages.currentTitleName("Checkout: Complete!");
+    await finishPage.completeMsg("Thank you for your order!");
+    await finishPage.backToProdButton();
+    await titlePages.expectUrlContains("/inventory.html");
+    await titlePages.currentTitleName("Products");
+    await titlePages.inventoryList();
+    await expect(inventoryPage.cartBadge).not.toBeDisplayed();
   });
 });

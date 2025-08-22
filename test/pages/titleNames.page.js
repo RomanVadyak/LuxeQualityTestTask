@@ -11,5 +11,8 @@ class TitlePages {
   async inventoryList() {
     await expect(this.inventory).toBeDisplayed();
   }
+  async expectUrlContains(text) {
+    await expect(browser).toHaveUrl(expect.stringContaining(text));
+  }
 }
 export default new TitlePages();

@@ -11,19 +11,25 @@ class CheckoutForm {
   get zipCodeInput() {
     return $("#postal-code");
   }
+  get checkoutFormInputs() {
+    return $(".checkout_info");
+  }
 
   async checkoutButton() {
     await this.checkoutBtn.click();
   }
-  async checkout(firstName, lastName, zipCode) {
+  async isCheckoutFormDisplayed() {
+    await expect(this.checkoutFormInputs).toBeDisplayed();
+  }
+  async fillForm({ firstName, lastName, zipCode }) {
     await this.firstNameInput.setValue(firstName);
     await this.lastNameInput.setValue(lastName);
     await this.zipCodeInput.setValue(zipCode);
   }
-  async verifyFormValues(first, last, zip) {
-    await expect(this.firstNameInput).toHaveValue(first);
-    await expect(this.lastNameInput).toHaveValue(last);
-    await expect(this.zipCodeInput).toHaveValue(zip);
+  async verifyFormValues(user) {
+    expect(await this.firstNameInput.getValue()).toEqual(user.firstName);
+    expect(await this.lastNameInput.getValue()).toEqual(user.lastName);
+    expect(await this.zipCodeInput.getValue()).toEqual(user.zipCode);
   }
 }
 export default new CheckoutForm();
