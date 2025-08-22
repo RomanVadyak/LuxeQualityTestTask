@@ -3,6 +3,10 @@
 This project contains automated end-to-end tests for [Swag Labs](https://www.saucedemo.com/) — a demo e-commerce site used for practicing UI testing.  
 The tests are implemented using WebdriverIO, Mocha, and Chai.
 
+### Test Data Generation
+We use `@faker-js/faker` to generate valid user data for checkout form tests.
+See `utils/faker.js`.
+
 ## 📦 Technologies
 
 - [Node.js](https://nodejs.org/)
@@ -66,6 +70,8 @@ The tests are implemented using WebdriverIO, Mocha, and Chai.
 │   └── titleNames.page.js
 ├── specs/
 │   ├── test1.e2e.js
+├── utils/
+│   ├── faker.js
 ├── .gitignore
 ├── package-lock.json
 ├── package.json
